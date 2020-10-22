@@ -53,6 +53,8 @@ svg.append("text")
 
 // CHART UPDATE FUNCTION -------------------**
 function update(data, type){
+    console.log(data)
+    data.sort(ascendingSort)
     // update domains
     xScale.domain(data.map(function(d) { return d.company; }));
     yScale.domain([0, d3.max(data, function(d) { return d[type]; })]);
@@ -82,6 +84,26 @@ function update(data, type){
 
     bottomAxis.call(xAxis)
     leftAxis.call(yAxis)
+
+    function ascendingSort(a, b) {
+        let comparison = 0;
+        if (a[type] > b[type]) {
+            comparison = 1;
+        } else if (a[type] < b[type]) {
+            comparison = -1;
+        }
+        return comparison;
+    }
+
+    function descendingSort(a, b) {
+        let comparison = 0;
+        if (a[type] < b[type]) {
+            comparison = 1;
+        } else if (a[type] > b[type]) {
+            comparison = -1;
+        }
+        return comparison;
+    }
 
 }
 
