@@ -1,7 +1,7 @@
 
 // CHART INIT ------------------------------**
-let type = d3.select('select').node().value
-let prevY = 0
+let type = d3.select('select').node().value;
+let sortUp = true;
 
 // create svg with margin convention
 const margin = ({top: 20, right: 20, bottom: 20, left: 60});
@@ -54,7 +54,12 @@ svg.append("text")
 // CHART UPDATE FUNCTION -------------------**
 function update(data, type){
     console.log(data)
-    data.sort(ascendingSort)
+    if (sortUp) {
+        data.sort(ascendingSort)
+    } else {
+        data.sort(descendingSort)
+    }
+    
     // update domains
     xScale.domain(data.map(function(d) { return d.company; }));
     yScale.domain([0, d3.max(data, function(d) { return d[type]; })]);
@@ -111,17 +116,22 @@ function update(data, type){
 
 // Loading data
 d3.csv('coffee-house-chains.csv', d3.autoType).then(data => {
-	update(data, type); // simply call the update function with the supplied data**
+	update(data, type); // simply call the update function with the supplied data
 });
 
 // (Later) Handling the type change
 function selectorChanged() {
     type = d3.select('select').node().value
     d3.csv('coffee-house-chains.csv', d3.autoType).then(data => {
-        update(data, type); // simply call the update function with the supplied data**
+        update(data, type); // simply call the update function with the supplied data
     });
+}
 
-    d3.selectAll(".bar")
+function sortSwap() {
+    sortUp = !sortUp;
+    d3.csv('coffee-house-chains.csv', d3.autoType).then(data => {
+        update(data, type); // simply call the update function with the supplied data
+    });
 }
 
 // (Later) Handling the sorting direction change
